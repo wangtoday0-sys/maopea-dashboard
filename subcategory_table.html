@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate">
+<meta name="referrer" content="no-referrer">
+<title>二级类目业务数据表</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:#f5f7fa;color:#1f2937;padding:24px}
+.wrap{max-width:1080px;margin:0 auto;background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.06);overflow:hidden}
+.head{background:linear-gradient(135deg,#1e40af,#3b82f6);color:#fff;padding:18px 24px}
+.head h1{font-size:18px;font-weight:600}
+.head .sub{font-size:12px;opacity:.85;margin-top:4px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{background:#eff4ff;color:#1e40af;font-weight:600;padding:10px 12px;border-bottom:2px solid #c7d7f5;text-align:right;white-space:nowrap}
+thead th:first-child{text-align:left}
+thead .th-sub{display:block;font-size:10px;font-weight:400;color:#5b7bc0}
+tbody td{padding:8px 12px;border-bottom:1px solid #eef1f6}
+tbody tr:nth-child(even){background:#f8fafc}
+tbody tr:hover{background:#eef4ff}
+.cat{font-weight:500}
+.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.strong{font-weight:600}
+.share-cell{display:inline-flex;align-items:center;gap:6px;justify-content:flex-end}
+.share-bar{display:inline-block;height:6px;border-radius:3px;background:#93c5fd;min-width:2px}
+.roi-good{color:#059669;font-weight:600}
+.roi-ok{color:#2563eb;font-weight:600}
+.roi-bad{color:#dc2626;font-weight:600}
+tr.total{background:#fff7ed;font-weight:700;border-top:2px solid #f3c58f}
+tr.total td{padding:10px 12px}
+.foot{padding:12px 24px;font-size:12px;color:#6b7280;line-height:1.8;border-top:1px solid #eef1f6}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <h1>二级类目业务数据表</h1>
+    <div class="sub">拼多多销售数据 · 2026年1-8月全量（全部店铺）· 口径：仅保留 4 类有效订单状态</div>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>二级类目</th>
+        <th>商家实收(元)</th>
+        <th>退款(元)</th>
+        <th>实际销售额(元)</th>
+        <th>销售占比<span class="th-sub">按实际销售额统计占比</span></th>
+        <th>推广花费(元)</th>
+        <th>投产比ROI<span class="th-sub">实际销售额 ÷ 推广花费</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="cat">蒸汽发膜</td><td class="num">563,045.52</td><td class="num">35,057.95</td><td class="num strong">527,987.57</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:100.0%"></span>30.63%</span></td><td class="num">147,816.85</td><td class="num roi-good">3.57</td></tr>
+      <tr><td class="cat">润目贴袋装</td><td class="num">449,575.58</td><td class="num">9,339.51</td><td class="num strong">440,236.07</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:83.4%"></span>25.54%</span></td><td class="num">146,023.40</td><td class="num roi-good">3.01</td></tr>
+      <tr><td class="cat">养生锤</td><td class="num">245,161.19</td><td class="num">18,147.65</td><td class="num strong">227,013.54</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:43.0%"></span>13.17%</span></td><td class="num">85,221.41</td><td class="num roi-good">2.66</td></tr>
+      <tr><td class="cat">劲爽贴</td><td class="num">94,258.68</td><td class="num">3,006.93</td><td class="num strong">91,251.75</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:17.3%"></span>5.29%</span></td><td class="num">33,122.98</td><td class="num roi-good">2.75</td></tr>
+      <tr><td class="cat">三伏贴</td><td class="num">79,404.11</td><td class="num">6,835.74</td><td class="num strong">72,568.37</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:13.7%"></span>4.21%</span></td><td class="num">48,730.20</td><td class="num roi-bad">1.49</td></tr>
+      <tr><td class="cat">蒸汽眼罩组合</td><td class="num">65,508.20</td><td class="num">1,481.73</td><td class="num strong">64,026.47</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:12.1%"></span>3.71%</span></td><td class="num">30,812.09</td><td class="num roi-ok">2.08</td></tr>
+      <tr><td class="cat">润目贴盒装</td><td class="num">32,502.22</td><td class="num">1,099.16</td><td class="num strong">31,403.06</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:5.9%"></span>1.82%</span></td><td class="num">5,504.04</td><td class="num roi-good">5.71</td></tr>
+      <tr><td class="cat">精油宫暖贴</td><td class="num">26,825.32</td><td class="num">1,181.64</td><td class="num strong">25,643.68</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:4.9%"></span>1.49%</span></td><td class="num">9,800.17</td><td class="num roi-good">2.62</td></tr>
+      <tr><td class="cat">常规宫暖贴</td><td class="num">24,805.57</td><td class="num">735.96</td><td class="num strong">24,069.61</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:4.6%"></span>1.40%</span></td><td class="num">4,816.75</td><td class="num roi-good">5.00</td></tr>
+      <tr><td class="cat">焕活系列</td><td class="num">24,125.57</td><td class="num">1,026.00</td><td class="num strong">23,099.57</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:4.4%"></span>1.34%</span></td><td class="num">0.04</td><td class="num roi-good">577,489.25</td></tr>
+      <tr><td class="cat">白茶眼罩</td><td class="num">20,654.04</td><td class="num">325.35</td><td class="num strong">20,328.69</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:3.9%"></span>1.18%</span></td><td class="num">3,838.70</td><td class="num roi-good">5.30</td></tr>
+      <tr><td class="cat">精油艾灸贴</td><td class="num">20,359.12</td><td class="num">572.32</td><td class="num strong">19,786.80</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:3.7%"></span>1.15%</span></td><td class="num">9,354.95</td><td class="num roi-ok">2.12</td></tr>
+      <tr><td class="cat">冰感眼罩</td><td class="num">19,748.62</td><td class="num">517.39</td><td class="num strong">19,231.23</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:3.6%"></span>1.12%</span></td><td class="num">10,475.70</td><td class="num roi-bad">1.84</td></tr>
+      <tr><td class="cat">常规暖颈带</td><td class="num">15,289.72</td><td class="num">380.70</td><td class="num strong">14,909.02</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:2.8%"></span>0.86%</span></td><td class="num">1,688.09</td><td class="num roi-good">8.83</td></tr>
+      <tr><td class="cat">泡脚包</td><td class="num">14,679.65</td><td class="num">287.62</td><td class="num strong">14,392.03</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:2.7%"></span>0.83%</span></td><td class="num">1,224.62</td><td class="num roi-good">11.75</td></tr>
+      <tr><td class="cat">三伏贴+雷火灸</td><td class="num">14,058.80</td><td class="num">926.09</td><td class="num strong">13,132.71</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:2.5%"></span>0.76%</span></td><td class="num">4,198.29</td><td class="num roi-good">3.13</td></tr>
+      <tr><td class="cat">蓝风铃眼罩</td><td class="num">13,160.00</td><td class="num">150.65</td><td class="num strong">13,009.35</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:2.5%"></span>0.75%</span></td><td class="num">4,167.67</td><td class="num roi-good">3.12</td></tr>
+      <tr><td class="cat">樱花眼罩</td><td class="num">12,986.57</td><td class="num">210.66</td><td class="num strong">12,775.91</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:2.4%"></span>0.74%</span></td><td class="num">6,995.59</td><td class="num roi-bad">1.83</td></tr>
+      <tr><td class="cat">卡皮宫暖贴</td><td class="num">13,284.76</td><td class="num">624.66</td><td class="num strong">12,660.10</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:2.4%"></span>0.73%</span></td><td class="num">6,583.55</td><td class="num roi-bad">1.92</td></tr>
+      <tr><td class="cat">舒缓贴</td><td class="num">10,331.65</td><td class="num">217.65</td><td class="num strong">10,114.00</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:1.9%"></span>0.59%</span></td><td class="num">5,596.38</td><td class="num roi-bad">1.81</td></tr>
+      <tr><td class="cat">暖腰贴</td><td class="num">7,167.78</td><td class="num">251.80</td><td class="num strong">6,915.98</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:1.3%"></span>0.40%</span></td><td class="num">33.64</td><td class="num roi-good">205.59</td></tr>
+      <tr><td class="cat">暖腹腰带</td><td class="num">6,490.32</td><td class="num">39.00</td><td class="num strong">6,451.32</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:1.2%"></span>0.37%</span></td><td class="num">215.66</td><td class="num roi-good">29.91</td></tr>
+      <tr><td class="cat">精油暖颈带</td><td class="num">5,565.52</td><td class="num">22.70</td><td class="num strong">5,542.82</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:1.0%"></span>0.32%</span></td><td class="num">991.80</td><td class="num roi-good">5.59</td></tr>
+      <tr><td class="cat">手腕带</td><td class="num">4,132.59</td><td class="num">80.19</td><td class="num strong">4,052.40</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:0.8%"></span>0.24%</span></td><td class="num">0.00</td><td class="num ">-</td></tr>
+      <tr><td class="cat">洗护沐</td><td class="num">3,395.89</td><td class="num">192.60</td><td class="num strong">3,203.29</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:0.6%"></span>0.19%</span></td><td class="num">0.00</td><td class="num ">-</td></tr>
+      <tr><td class="cat">雷火灸</td><td class="num">2,431.86</td><td class="num">155.60</td><td class="num strong">2,276.26</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:0.4%"></span>0.13%</span></td><td class="num">1,192.75</td><td class="num roi-bad">1.91</td></tr>
+      <tr><td class="cat">护眼套装</td><td class="num">2,147.04</td><td class="num">34.33</td><td class="num strong">2,112.71</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:0.4%"></span>0.12%</span></td><td class="num">1,142.17</td><td class="num roi-bad">1.85</td></tr>
+      <tr><td class="cat">暖膝贴</td><td class="num">2,101.51</td><td class="num">0.00</td><td class="num strong">2,101.51</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:0.4%"></span>0.12%</span></td><td class="num">0.00</td><td class="num ">-</td></tr>
+      <tr><td class="cat">精油眼罩</td><td class="num">1,896.31</td><td class="num">62.90</td><td class="num strong">1,833.41</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:0.3%"></span>0.11%</span></td><td class="num">405.58</td><td class="num roi-good">4.52</td></tr>
+      <tr><td class="cat">休足贴</td><td class="num">1,780.10</td><td class="num">50.37</td><td class="num strong">1,729.73</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:0.3%"></span>0.10%</span></td><td class="num">601.54</td><td class="num roi-good">2.88</td></tr>
+      <tr><td class="cat">小毛豆</td><td class="num">1,827.95</td><td class="num">101.60</td><td class="num strong">1,726.35</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:0.3%"></span>0.10%</span></td><td class="num">0.00</td><td class="num ">-</td></tr>
+      <tr><td class="cat">晚安眼罩</td><td class="num">1,423.06</td><td class="num">18.90</td><td class="num strong">1,404.16</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:0.3%"></span>0.08%</span></td><td class="num">725.76</td><td class="num roi-bad">1.93</td></tr>
+      <tr><td class="cat">花茶眼罩</td><td class="num">1,339.40</td><td class="num">62.80</td><td class="num strong">1,276.60</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:0.2%"></span>0.07%</span></td><td class="num">152.81</td><td class="num roi-good">8.35</td></tr>
+      <tr><td class="cat">桂花眼罩</td><td class="num">1,112.79</td><td class="num">167.60</td><td class="num strong">945.19</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:0.2%"></span>0.05%</span></td><td class="num">349.72</td><td class="num roi-good">2.70</td></tr>
+      <tr><td class="cat">蓬蓬洗发水</td><td class="num">905.57</td><td class="num">28.80</td><td class="num strong">876.77</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:0.2%"></span>0.05%</span></td><td class="num">0.00</td><td class="num ">-</td></tr>
+      <tr><td class="cat">干发喷雾</td><td class="num">840.43</td><td class="num">18.70</td><td class="num strong">821.73</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:0.2%"></span>0.05%</span></td><td class="num">0.00</td><td class="num ">-</td></tr>
+      <tr><td class="cat">身体素颜霜</td><td class="num">798.90</td><td class="num">0.00</td><td class="num strong">798.90</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:0.2%"></span>0.05%</span></td><td class="num">676.81</td><td class="num roi-bad">1.18</td></tr>
+      <tr><td class="cat">雷火灸+艾灸贴</td><td class="num">827.82</td><td class="num">79.80</td><td class="num strong">748.02</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:0.1%"></span>0.04%</span></td><td class="num">734.78</td><td class="num roi-bad">1.02</td></tr>
+      <tr><td class="cat">紫草膏</td><td class="num">724.09</td><td class="num">33.03</td><td class="num strong">691.06</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:0.1%"></span>0.04%</span></td><td class="num">0.00</td><td class="num ">-</td></tr>
+      <tr><td class="cat">护手霜</td><td class="num">226.60</td><td class="num">12.90</td><td class="num strong">213.70</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:0.0%"></span>0.01%</span></td><td class="num">0.00</td><td class="num ">-</td></tr>
+      <tr><td class="cat">身体乳</td><td class="num">253.60</td><td class="num">67.90</td><td class="num strong">185.70</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:0.0%"></span>0.01%</span></td><td class="num">0.00</td><td class="num ">-</td></tr>
+      <tr><td class="cat">精油晚安贴</td><td class="num">130.60</td><td class="num">0.00</td><td class="num strong">130.60</td><td class="num"><span class="share-cell"><span class="share-bar" style="width:0.0%"></span>0.01%</span></td><td class="num">0.00</td><td class="num ">-</td></tr>
+      <tr class="total"><td class="cat">合计</td><td class="num">1,807,284.62</td><td class="num">83,606.88</td><td class="num">1,723,677.74</td><td class="num">100.00%</td><td class="num">573,194.48</td><td class="num roi-good">3.01</td></tr>
+    </tbody>
+  </table>
+  <div class="foot">
+    口径说明：实际销售额 = 商家实收 − 退款；销售占比 = 该二级类目实际销售额 ÷ 全部二级类目实际销售额合计（¥1,723,677.74）；<br>
+    推广花费为大类花费按组合实际销售额占比分摊后、按二级类目汇总（仅 5-8 月有投放）；投产比ROI = 实际销售额 ÷ 推广花费，推广花费为 0 时显示「-」。<br>
+    ROI 颜色分级：<span class="roi-good">≥2.2 较好</span> / <span class="roi-ok">≥2.0 持平</span> / <span class="roi-bad">&lt;2.0 偏低</span>。注：个别类目（如「焕活系列」）推广花费趋近于 0，ROI 数值异常放大，仅供参考。
+  </div>
+</div>
+</body>
+</html>
