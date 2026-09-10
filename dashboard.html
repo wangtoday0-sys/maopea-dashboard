@@ -613,6 +613,7 @@ table.detail-list tbody tr{height:31px;box-sizing:border-box}
               <th data-key="gross" class="num">商家实收(元)</th>
               <th data-key="refund" class="num">退款(元)</th>
               <th data-key="net" class="num">实际销售额(元)</th>
+              <th data-key="refundRate" class="num">退款率</th>
               <th data-key="share" class="num">销售占比</th>
               <th data-key="spend" class="num">推广花费(元)</th>
               <th data-key="roi" class="num">投产比ROI</th>
@@ -647,6 +648,7 @@ table.detail-list tbody tr{height:31px;box-sizing:border-box}
               <th data-key="gross" class="num">商家实收(元)</th>
               <th data-key="refund" class="num">退款(元)</th>
               <th data-key="net" class="num">实际销售额(元)</th>
+              <th data-key="refundRate" class="num">退款率</th>
               <th data-key="share" class="num">销售占比</th>
               <th data-key="spend" class="num">推广花费(元)</th>
               <th data-key="roi" class="num">投产比ROI</th>
@@ -673,7 +675,9 @@ table.detail-list tbody tr{height:31px;box-sizing:border-box}
               <th data-key="gross" class="num">商家实收(元)</th>
               <th data-key="refund" class="num">退款(元)</th>
               <th data-key="net" class="num">实际销售额(元)</th>
+              <th data-key="refundRate" class="num">退款率</th>
               <th data-key="share" class="num">销售占比</th>
+              <th data-key="roi" class="num">投产比ROI</th>
             </tr>
           </thead>
           <tbody></tbody>
@@ -1300,21 +1304,22 @@ function renderCatTable(){
   rows.forEach(r=>{
     r.share = totalNet>0 ? r.net/totalNet : 0;
     r.roi   = r.spend>0 ? r.net/r.spend : null;
+    r.refundRate = r.gross>0 ? r.refund/r.gross : null;
   });
   const sorted = [...rows].sort((a,b)=>{
     if(catSortKey==='name'){
       const c = a.name.localeCompare(b.name,'zh');
       return catSortDir==='desc' ? -c : c;
     }
-    const av = catSortKey==='roi' ? (a.roi==null?-Infinity:a.roi) : a[catSortKey];
-    const bv = catSortKey==='roi' ? (b.roi==null?-Infinity:b.roi) : b[catSortKey];
+    const av = a[catSortKey]==null ? -Infinity : a[catSortKey];
+    const bv = b[catSortKey]==null ? -Infinity : b[catSortKey];
     return catSortDir==='desc' ? bv-av : av-bv;
   });
 
   const _tbody = document.querySelector('#catTable tbody');
   const _tfoot = document.querySelector('#catTable tfoot');
   if(!sorted.length){
-    _tbody.innerHTML = emptyRow(7);
+    _tbody.innerHTML = emptyRow(8);
     _tfoot.innerHTML = '';
   }else{
   _tbody.innerHTML = sorted.map(r=>`<tr>
@@ -1322,6 +1327,7 @@ function renderCatTable(){
     <td class="num">¥${fmt(r.gross,2)}</td>
     <td class="num">¥${fmt(r.refund,2)}</td>
     <td class="num">¥${fmt(r.net,2)}</td>
+    <td class="num">${r.refundRate==null?'-':pct(r.refundRate,2)}</td>
     <td class="num">${pct(r.share,2)}</td>
     <td class="num">${r.spend>0?'¥'+fmt(r.spend,2):'-'}</td>
     <td class="num">${roiCell(r.roi)}</td>
@@ -1332,11 +1338,13 @@ function renderCatTable(){
   const tr = rows.reduce((s,r)=>s+r.refund,0);
   const ts = rows.reduce((s,r)=>s+r.spend,0);
   const tRoi = ts>0 ? totalNet/ts : null;
+  const tRefundRate = tg>0 ? tr/tg : null;
   _tfoot.innerHTML = `<tr>
     <td>合计</td>
     <td class="num">¥${fmt(tg,2)}</td>
     <td class="num">¥${fmt(tr,2)}</td>
     <td class="num">¥${fmt(totalNet,2)}</td>
+    <td class="num">${tRefundRate==null?'-':pct(tRefundRate,2)}</td>
     <td class="num">100.00%</td>
     <td class="num">${ts>0?'¥'+fmt(ts,2):'-'}</td>
     <td class="num">${roiCell(tRoi)}</td>
@@ -1630,20 +1638,21 @@ function renderSubCatTable(){
   rows.forEach(r=>{
     r.share = totalNet>0 ? r.net/totalNet : 0;
     r.roi   = r.spend>0 ? r.net/r.spend : null;
+    r.refundRate = r.gross>0 ? r.refund/r.gross : null;
   });
   const sorted = [...rows].sort((a,b)=>{
     if(subcatSortKey==='name'){
       const c = a.name.localeCompare(b.name,'zh');
       return subcatSortDir==='desc' ? -c : c;
     }
-    const av = subcatSortKey==='roi' ? (a.roi==null?-Infinity:a.roi) : a[subcatSortKey];
-    const bv = subcatSortKey==='roi' ? (b.roi==null?-Infinity:b.roi) : b[subcatSortKey];
+    const av = a[subcatSortKey]==null ? -Infinity : a[subcatSortKey];
+    const bv = b[subcatSortKey]==null ? -Infinity : b[subcatSortKey];
     return subcatSortDir==='desc' ? bv-av : av-bv;
   });
   const _tbody = document.querySelector('#subcatTable tbody');
   const _tfoot = document.querySelector('#subcatTable tfoot');
   if(!sorted.length){
-    _tbody.innerHTML = emptyRow(7);
+    _tbody.innerHTML = emptyRow(8);
     _tfoot.innerHTML = '';
   }else{
   _tbody.innerHTML = sorted.map(r=>`<tr>
@@ -1651,6 +1660,7 @@ function renderSubCatTable(){
     <td class="num">¥${fmt(r.gross,2)}</td>
     <td class="num">¥${fmt(r.refund,2)}</td>
     <td class="num">¥${fmt(r.net,2)}</td>
+    <td class="num">${r.refundRate==null?'-':pct(r.refundRate,2)}</td>
     <td class="num">${pct(r.share,2)}</td>
     <td class="num">${r.spend>0?'¥'+fmt(r.spend,2):'-'}</td>
     <td class="num">${roiCell(r.roi)}</td>
@@ -1661,11 +1671,13 @@ function renderSubCatTable(){
   const tr = rows.reduce((s,r)=>s+r.refund,0);
   const ts = rows.reduce((s,r)=>s+r.spend,0);
   const tRoi = ts>0 ? totalNet/ts : null;
+  const tRefundRate = tg>0 ? tr/tg : null;
   _tfoot.innerHTML = `<tr>
     <td>合计</td>
     <td class="num">¥${fmt(tg,2)}</td>
     <td class="num">¥${fmt(tr,2)}</td>
     <td class="num">¥${fmt(totalNet,2)}</td>
+    <td class="num">${tRefundRate==null?'-':pct(tRefundRate,2)}</td>
     <td class="num">100.00%</td>
     <td class="num">${ts>0?'¥'+fmt(ts,2):'-'}</td>
     <td class="num">${roiCell(tRoi)}</td>
@@ -1743,30 +1755,36 @@ function renderSkuTable(){
   const map = {};
   data.forEach(r=>{
     const k = r.组合名称||'未命名组合';
-    if(!map[k]) map[k] = {name:k, gross:0, refund:0, net:0};
+    if(!map[k]) map[k] = {name:k, gross:0, refund:0, net:0, spend:0};
     map[k].gross += +r.实收金额||0;
     map[k].refund += +r.退款金额||0;
     map[k].net += +r.实际销售金额||0;
+    map[k].spend += +r.分摊推广花费||0;
   });
   const allRows = Object.values(map);
   const totalNet = allRows.reduce((s,r)=>s+r.net,0);
   // 默认按实际销售额取 TOP 15
   const top15 = allRows.sort((a,b)=>b.net-a.net).slice(0,15);
-  top15.forEach(r=>{ r.share = totalNet>0 ? r.net/totalNet : 0; });
+  top15.forEach(r=>{
+    r.share = totalNet>0 ? r.net/totalNet : 0;
+    r.roi = r.spend>0 ? r.net/r.spend : null;
+    r.refundRate = r.gross>0 ? r.refund/r.gross : null;
+  });
   // 在 TOP 15 内按当前排序字段排序
   const sorted = [...top15].sort((a,b)=>{
     if(skuSortKey==='name'){
       const c = a.name.localeCompare(b.name,'zh');
       return skuSortDir==='desc' ? -c : c;
     }
-    const av = a[skuSortKey], bv = b[skuSortKey];
+    const av = a[skuSortKey]==null ? -Infinity : a[skuSortKey];
+    const bv = b[skuSortKey]==null ? -Infinity : b[skuSortKey];
     return skuSortDir==='desc' ? bv-av : av-bv;
   });
 
   const _tbody = document.querySelector('#skuTable tbody');
   const _tfoot = document.querySelector('#skuTable tfoot');
   if(!sorted.length){
-    _tbody.innerHTML = emptyRow(5);
+    _tbody.innerHTML = emptyRow(7);
     _tfoot.innerHTML = '';
   }else{
   _tbody.innerHTML = sorted.map(r=>`<tr>
@@ -1774,11 +1792,13 @@ function renderSkuTable(){
     <td class="num">¥${fmt(r.gross,2)}</td>
     <td class="num">¥${fmt(r.refund,2)}</td>
     <td class="num">¥${fmt(r.net,2)}</td>
+    <td class="num">${r.refundRate==null?'-':pct(r.refundRate,2)}</td>
     <td class="num">${pct(r.share,2)}</td>
+    <td class="num">${roiCell(r.roi)}</td>
   </tr>`).join('');
 
   // 脚注：说明分母为筛选范围全部组合的实际销售额
-  _tfoot.innerHTML = `<tr><td class="note" colspan="5">共 ${fmt(allRows.length)} 个组合，仅展示实际销售额 TOP 15；销售占比 = 组合实际销售额 ÷ 筛选范围全部组合实际销售额合计（¥${fmt(totalNet,2)}）</td></tr>`;
+  _tfoot.innerHTML = `<tr><td class="note" colspan="7">共 ${fmt(allRows.length)} 个组合，仅展示实际销售额 TOP 15；销售占比 = 组合实际销售额 ÷ 筛选范围全部组合实际销售额合计（¥${fmt(totalNet,2)}）；投产比 ROI = 实际销售额 ÷ 分摊推广花费</td></tr>`;
   }
 
   // 排序指示
