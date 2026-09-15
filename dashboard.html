@@ -1009,13 +1009,9 @@ function toggleOption(dim,val){
   if(dim==='cats') syncSubcatsToCats();   // 大类变化 → 二级类目随之联动过滤
   refreshDim(dim);
 }
-// 全选/取消全选（取消不允许到 0）
+// 全选/取消全选：全选勾选所有项；取消全选清空到 0（不保底任何项）
 function selectAll(dim, all){
-  if(all){ filterState[dim] = new Set(effectiveVals(dim)); }
-  else {
-    // 保底：保留 1 项，避免空筛选
-    filterState[dim] = new Set([effectiveVals(dim)[0]]);
-  }
+  filterState[dim] = all ? new Set(effectiveVals(dim)) : new Set();
   if(dim==='cats') syncSubcatsToCats();   // 大类变化 → 二级类目随之联动过滤
   refreshDim(dim);
 }
@@ -1027,7 +1023,7 @@ function updateDimUI(dim){
   const wrap = document.querySelector('.fbtn-wrap[data-dim="'+dim+'"]');
   if(!wrap) return;
   const set = filterState[dim], total = effectiveVals(dim).length, size = set.size;
-  const all = size===total;
+  const all = total>0 && size===total;
   const dsum = wrap.querySelector('.fbtn .dsum');
   dsum.textContent = all ? '全部' : '已选 '+size+'/'+total;
   wrap.querySelector('.fbtn').classList.toggle('has-filter', !all);
