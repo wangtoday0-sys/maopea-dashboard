@@ -587,9 +587,14 @@ table.detail-list tbody tr{height:31px;box-sizing:border-box}
   <!-- 第一行 -->
   <div class="grid" data-page-node-id="8vSYNhBvMzqk427y8GG7rc">
     <div class="card col-8" data-page-node-id="P4TSEdfgz5keKO4vDqhrAP">
-      <h3 data-page-node-id="nNGIqnmgd538k1eKrmrpEf">📈 各店铺月度销售趋势<span class="meta" data-page-node-id="Rm4Gbexg2TD2ctwvxxej5r">单位：元</span></h3>
+      <h3 data-page-node-id="nNGIqnmgd538k1eKrmrpEf">📈 各店铺月度销售趋势<span class="meta" data-page-node-id="Rm4Gbexg2TD2ctwvxxej5r">单位：元</span>
+        <span class="view-toggle" id="trendViewToggle" data-page-node-id="trendViewToggle">
+          <button type="button" class="vt-btn active" data-view="chart" data-page-node-id="trendChartBtn">图表</button>
+          <button type="button" class="vt-btn" data-view="table" data-page-node-id="trendTableBtn">表格</button>
+        </span>
+      </h3>
       <div id="chartTrend" class="chart tall" data-page-node-id="SEZrGM0Ao2OvWX5FfsYVzS"></div>
-      <div class="table-wrap" style="margin-top:14px;max-height:340px" data-page-node-id="trendTblWrap">
+      <div id="trendTableWrap" class="table-wrap" style="margin-top:14px;max-height:340px;display:none" data-page-node-id="trendTblWrap">
         <table class="data" id="trendTable" data-page-node-id="trendTable"></table>
       </div>
     </div>
@@ -1144,8 +1149,7 @@ function scheduleRender(){
 function renderAll(){
   computeView();
   renderKPI();
-  renderTrend();
-  renderTrendTable();
+  renderTrendModule();
   renderStorePie();
   renderCatModule();
   renderCatStack();
@@ -1335,6 +1339,18 @@ function renderTrendTable(){
   el.innerHTML = html;
 }
 
+// ============ 月度销售趋势 视图切换（图表 / 表格，互斥） ============
+let trendView = 'chart';   // 'chart' | 'table'
+
+function renderTrendModule(){
+  if(trendView==='chart'){
+    renderTrend();
+    if(charts.trend) charts.trend.resize();
+  }else{
+    renderTrendTable();
+  }
+}
+
 // ============ 店铺饼图 ============
 function renderStorePie(){
   const data = VIEW.sm;
@@ -1487,6 +1503,18 @@ document.querySelectorAll('#catViewToggle .vt-btn').forEach(btn=>{
     document.getElementById('catTableWrap').style.display = isTable?'':'none';
     document.getElementById('chartCatBar').style.display = isTable?'none':'';
     renderCatModule();
+  };
+});
+
+// ============ 月度销售趋势 视图切换 ============
+document.querySelectorAll('#trendViewToggle .vt-btn').forEach(btn=>{
+  btn.onclick = ()=>{
+    trendView = btn.dataset.view;
+    document.querySelectorAll('#trendViewToggle .vt-btn').forEach(b=>b.classList.toggle('active', b===btn));
+    const isChart = trendView==='chart';
+    document.getElementById('chartTrend').style.display = isChart?'':'none';
+    document.getElementById('trendTableWrap').style.display = isChart?'none':'';
+    renderTrendModule();
   };
 });
 
