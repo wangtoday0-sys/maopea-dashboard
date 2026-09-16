@@ -589,6 +589,9 @@ table.detail-list tbody tr{height:31px;box-sizing:border-box}
     <div class="card col-8" data-page-node-id="P4TSEdfgz5keKO4vDqhrAP">
       <h3 data-page-node-id="nNGIqnmgd538k1eKrmrpEf">📈 各店铺月度销售趋势<span class="meta" data-page-node-id="Rm4Gbexg2TD2ctwvxxej5r">单位：元</span></h3>
       <div id="chartTrend" class="chart tall" data-page-node-id="SEZrGM0Ao2OvWX5FfsYVzS"></div>
+      <div class="table-wrap" style="margin-top:14px;max-height:340px" data-page-node-id="trendTblWrap">
+        <table class="data" id="trendTable" data-page-node-id="trendTable"></table>
+      </div>
     </div>
     <div class="card col-4" data-page-node-id="RHFQeVAS6Xc2M40DMo3QPs">
       <h3 data-page-node-id="Ni4waZFflXBxdEY1SzfRPo">🏪 店铺销售占比</h3>
@@ -1142,6 +1145,7 @@ function renderAll(){
   computeView();
   renderKPI();
   renderTrend();
+  renderTrendTable();
   renderStorePie();
   renderCatModule();
   renderCatStack();
@@ -1299,6 +1303,36 @@ function renderTrend(){
     series,
     dataZoom: months.length>6?[{type:'inside'},{type:'slider',height:16,bottom:0}]:undefined,
   }, true);
+}
+
+// ============ 月度销售趋势配套表格（与趋势图共用 VIEW.sm，按月对齐） ============
+// 行1：月份表头；行2~4：各店铺对应月份销售额；行5：每月合计（=各店销售额之和）
+function renderTrendTable(){
+  const el = document.getElementById('trendTable');
+  if(!el) return;
+  const data = VIEW.sm;
+  const months = [...filterState.months].sort((a,b)=>+a.replace(/\D/g,'')-+b.replace(/\D/g,''));
+  const stores = [...filterState.stores];
+  if(!months.length || !stores.length){
+    el.innerHTML = '<tbody><tr><td class="note" style="text-align:center;color:var(--text-3);padding:18px">未选择月份或店铺</td></tr></tbody>';
+    return;
+  }
+  // 月度 × 店铺 取值（与趋势图同一口径：实际销售金额）
+  const get = (s,m)=>{ const r = data.find(x=>x.店铺===s && x.月份key===m); return r ? (+r.实际销售金额||0) : 0; };
+  // 表头：首格为维度标签，其余为各月份（向右对齐，与数值列一致）
+  let html = '<thead><tr><th>店铺 ＼ 月份</th>' + months.map(m=>`<th class="num">${m}</th>`).join('') + '</tr></thead>';
+  // 各店铺行
+  html += '<tbody>';
+  stores.forEach(s=>{
+    html += `<tr><td>${s}</td>` + months.map(m=>`<td class="num">¥${fmt(get(s,m),0)}</td>`).join('') + '</tr>';
+  });
+  html += '</tbody>';
+  // 合计行：每月 = 各店之和（与趋势图「月度总额」柱一致）
+  html += '<tfoot><tr><td>合计</td>' + months.map(m=>{
+    const sum = stores.reduce((acc,s)=>acc+get(s,m),0);
+    return `<td class="num">¥${fmt(sum,0)}</td>`;
+  }).join('') + '</tr></tfoot>';
+  el.innerHTML = html;
 }
 
 // ============ 店铺饼图 ============
