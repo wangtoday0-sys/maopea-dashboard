@@ -1251,7 +1251,7 @@ function renderKPI(){
     gross:  {v:gross,  fmt:v=>'¥'+fmt(v,0), delta:'含未退部分'},
     orders: {v:orders, fmt:v=>fmt(v),       delta:'平均客单价 ¥'+fmt(aov,1)},
     qty:    {v:qty,    fmt:v=>fmt(v),       delta:'单件均价 ¥'+fmt(qty>0?total/qty:0,1)},
-    spend:  {v:promoSpend>0?promoSpend:null, fmt:v=>v>0?'¥'+fmt(v,0):'—', delta:promoSpend>0?'仅 5-8 月投放':'当前筛选无推广投放'},
+    spend:  {v:promoSpend>0?promoSpend:null, fmt:v=>v>0?'¥'+fmt(v,0):'—', delta:promoSpend>0?'4月3号之后':'当前筛选无推广投放'},
     roi:    {v:roi,    fmt:v=>v==null?'—':v.toFixed(2), delta:'实际销售额÷推广花费 · '+roiTier},
   };
 
