@@ -2336,7 +2336,7 @@ function isAuthed(){
   try{ return localStorage.getItem(AUTH_KEY)==='1'; }catch(e){ return false; }
 }
 async function doAuth(){
-  const pw = document.getElementById('authPw').value.trim();
+  const pw = (document.getElementById('authPw').value || '').normalize('NFKC').replace(/\s+/g, '');
   const err = document.getElementById('authErr');
   if(!pw){ err.textContent = '请输入密码'; return; }
   const h = await sha256(pw);
