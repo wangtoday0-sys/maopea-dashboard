@@ -936,6 +936,15 @@ function setRefreshing(busy){
 // 手动刷新按钮
 document.getElementById('refreshBtn').addEventListener('click', ()=>loadData(true));
 
+// ============ 历史数据汇总板块：状态声明（必须在调用前初始化，避免 TDZ） ============
+const HIST_STORE_ORDER = ['全部','MAOPEA','专卖店','旗舰店','京东','小红书'];
+let histFilter = {
+  years: new Set([2024,2025,2026]),
+  months: new Set([1,2,3,4,5,6,7,8,9,10,11,12]),
+  stores: new Set(['全部']),
+  view: 'month'   // 'year' | 'month' | 'day'
+};
+
 // 启动首次加载
 loadData(false);
 initHistoryFilters();
@@ -1459,14 +1468,6 @@ function renderTrendModule(){
 }
 
 // ============ 历史数据汇总板块（独立区域） ============
-const HIST_STORE_ORDER = ['全部','MAOPEA','专卖店','旗舰店','京东','小红书'];
-let histFilter = {
-  years: new Set([2024,2025,2026]),
-  months: new Set([1,2,3,4,5,6,7,8,9,10,11,12]),
-  stores: new Set(['全部']),
-  view: 'month'   // 'year' | 'month' | 'day'
-};
-
 function renderHistChips(){
   document.getElementById('histYearChips').innerHTML = [2024,2025,2026].map(y=>
     `<span class="h-chip ${histFilter.years.has(y)?'active':''}" data-type="year" data-val="${y}">${y}年</span>`
