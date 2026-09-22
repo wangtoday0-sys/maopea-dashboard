@@ -592,6 +592,44 @@ table.detail-list tbody tr{height:31px;box-sizing:border-box}
     <div class="err" id="authErr" data-page-node-id="9BZV2AEJNeJgCJqCBOK5Dp"></div>
   </div>
 </div>
+<!-- 访问控制：独立脚本，置于业务脚本之前，确保即便主脚本报错登录仍可用 -->
+<script>
+(function(){
+  var AUTH_HASH = 'b10c8308c6bc1614dbff138a916823ecaa7225f9254af423488153c844fff2aa';
+  var AUTH_KEY  = '__dash_auth_v1';
+  async function sha256(str){
+    if(window.crypto && window.crypto.subtle){
+      var buf = await window.crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+      return Array.from(new Uint8Array(buf)).map(function(b){ return b.toString(16).padStart(2,'0'); }).join('');
+    }
+    throw new Error('当前环境不支持加密校验，请通过 https 链接打开本页面');
+  }
+  function setAuth(ok){ try{ localStorage.setItem(AUTH_KEY, ok ? '1' : '0'); }catch(e){} }
+  function isAuthed(){ try{ return localStorage.getItem(AUTH_KEY) === '1'; }catch(e){ return false; } }
+  window.doAuth = async function(){
+    var err = document.getElementById('authErr');
+    try{
+      var pw = (document.getElementById('authPw').value || '').normalize('NFKC').replace(/\s+/g, '');
+      if(!pw){ if(err) err.textContent = '请输入密码'; return; }
+      var h = await sha256(pw);
+      if(h === AUTH_HASH){
+        setAuth(true);
+        var ov = document.getElementById('authOverlay'); if(ov) ov.classList.add('hidden');
+        setTimeout(function(){ try{ var cs = window.charts || {}; Object.keys(cs).forEach(function(k){ var c = cs[k]; if(c && c.resize) c.resize(); }); }catch(e){} }, 120);
+      }else{
+        if(err) err.textContent = '密码错误，请重试';
+        var pwEl = document.getElementById('authPw'); if(pwEl){ pwEl.value = ''; pwEl.focus(); }
+      }
+    }catch(e){
+      if(err) err.textContent = '校验失败：' + (e && e.message ? e.message : e);
+      if(window.console) console.error(e);
+    }
+  };
+  if(isAuthed()){
+    var ov = document.getElementById('authOverlay'); if(ov) ov.classList.add('hidden');
+  }
+})();
+</script>
 <div class="header" data-page-node-id="RUtyqdD4jEeuZYoicpG5qn">
   <div class="hdr-left" data-page-node-id="BLMfnrviCXa4rHZMEKNyJg">
     <h1 data-page-node-id="MYmPZV1sIRmiP6YF450xRB">拼多多销售数据看板</h1>
@@ -2319,44 +2357,6 @@ function exportDetailCSV(){
 }
 
 document.getElementById('exportDetailBtn').addEventListener('click', exportDetailCSV);
-
-// ============ 访问控制（前端密码保护） ============
-// 预设 SHA-256 哈希值（密码：weOKpKA1Orgp_uwEvNhjiA）
-const AUTH_HASH = 'b10c8308c6bc1614dbff138a916823ecaa7225f9254af423488153c844fff2aa';
-const AUTH_KEY  = '__dash_auth_v1';
-
-async function sha256(str){
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-  return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
-}
-function setAuth(ok){
-  try{ localStorage.setItem(AUTH_KEY, ok ? '1' : '0'); }catch(e){}
-}
-function isAuthed(){
-  try{ return localStorage.getItem(AUTH_KEY)==='1'; }catch(e){ return false; }
-}
-async function doAuth(){
-  const pw = (document.getElementById('authPw').value || '').normalize('NFKC').replace(/\s+/g, '');
-  const err = document.getElementById('authErr');
-  if(!pw){ err.textContent = '请输入密码'; return; }
-  const h = await sha256(pw);
-  if(h === AUTH_HASH){
-    setAuth(true);
-    document.getElementById('authOverlay').classList.add('hidden');
-    // 延迟触发图表 resize，确保容器已可见
-    setTimeout(()=>{
-      Object.values(charts).forEach(c=>c && c.resize());
-    }, 120);
-  }else{
-    err.textContent = '密码错误，请重试';
-    document.getElementById('authPw').value = '';
-    document.getElementById('authPw').focus();
-  }
-}
-// 页面加载时检查
-if(isAuthed()){
-  document.getElementById('authOverlay').classList.add('hidden');
-}
 
 // ============ 响应式 ============
 window.addEventListener('resize', ()=>{
