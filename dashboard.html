@@ -407,6 +407,39 @@ body{
 .col-12{grid-column:span 12}
 
 /* ==========================================================================
+   历史数据汇总板块（独立样式，与其他模块明显区分）
+   ========================================================================== */
+.history-card{
+  border-left:5px solid #f59e0b;
+  background:linear-gradient(180deg,var(--surface),#fffbeb);
+}
+.history-card h3{color:#92400e}
+.history-card h3 .meta{color:#b45309}
+.history-filters{
+  display:flex;gap:24px;flex-wrap:wrap;
+  padding:14px 16px;margin-bottom:16px;
+  background:rgba(251,191,36,.08);
+  border:1px solid rgba(245,158,11,.18);
+  border-radius:var(--r-md);
+}
+.h-filter{min-width:120px}
+.h-filter label{
+  display:block;font-size:var(--fs-xs);color:var(--text-2);margin-bottom:8px;font-weight:600;
+}
+.h-chips{display:flex;flex-wrap:wrap;gap:8px}
+.h-chip{
+  display:inline-flex;align-items:center;
+  padding:5px 12px;border-radius:var(--r-full);
+  border:1px solid var(--border-soft);background:var(--surface);
+  font-size:var(--fs-sm);color:var(--text);cursor:pointer;user-select:none;
+  transition:background var(--dur) var(--ease),color var(--dur) var(--ease),border-color var(--dur) var(--ease),box-shadow var(--dur) var(--ease);
+}
+.h-chip:hover{border-color:#f59e0b;background:#fffbeb}
+.h-chip.active{background:#f59e0b;color:#fff;border-color:#f59e0b;box-shadow:var(--shadow-xs)}
+#historyTable{min-width:720px}
+#historyTable td,#historyTable th{white-space:nowrap}
+
+/* ==========================================================================
    表格
    ========================================================================== */
 .table-wrap{max-height:340px;overflow:auto;border-radius:var(--r-md)}
@@ -583,6 +616,40 @@ table.detail-list tbody tr{height:31px;box-sizing:border-box}
 
   <!-- KPI -->
   <div class="kpi-grid" id="kpiGrid" data-page-node-id="Nhs6HhEt2A5oTmywaWkT1c"></div>
+
+  <!-- 历史数据汇总板块（独立区域，与下方现有模块明确区分） -->
+  <div class="grid" id="historyGrid" data-page-node-id="historyGrid">
+    <div class="card col-12 history-card" data-page-node-id="historyCard">
+      <h3 data-page-node-id="historyH3">📜 历史数据汇总<span class="meta" data-page-node-id="historyMeta">2024-2026 外网数据 · 单位：元</span>
+        <span class="view-toggle" id="historyViewToggle" data-page-node-id="historyViewToggle">
+          <button type="button" class="vt-btn active" data-view="month" data-page-node-id="histViewMonth">按月</button>
+          <button type="button" class="vt-btn" data-view="day" data-page-node-id="histViewDay">按日</button>
+          <button type="button" class="vt-btn" data-view="year" data-page-node-id="histViewYear">按年</button>
+        </span>
+      </h3>
+      <div class="history-filters" id="historyFilters" data-page-node-id="historyFilters">
+        <div class="h-filter" data-page-node-id="histFilterYear">
+          <label>年份</label>
+          <div class="h-chips" id="histYearChips" data-page-node-id="histYearChips"></div>
+        </div>
+        <div class="h-filter" data-page-node-id="histFilterMonth">
+          <label>月份</label>
+          <div class="h-chips" id="histMonthChips" data-page-node-id="histMonthChips"></div>
+        </div>
+        <div class="h-filter" data-page-node-id="histFilterStore">
+          <label>店铺</label>
+          <div class="h-chips" id="histStoreChips" data-page-node-id="histStoreChips"></div>
+        </div>
+      </div>
+      <div class="table-wrap" style="max-height:420px" data-page-node-id="historyTableWrap">
+        <table class="data" id="historyTable" data-page-node-id="historyTable">
+          <thead id="historyThead" data-page-node-id="historyThead"></thead>
+          <tbody id="historyTbody" data-page-node-id="historyTbody"></tbody>
+          <tfoot id="historyTfoot" data-page-node-id="historyTfoot"></tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
 
   <!-- 第一行 -->
   <div class="grid" data-page-node-id="8vSYNhBvMzqk427y8GG7rc">
@@ -833,6 +900,7 @@ document.getElementById('refreshBtn').addEventListener('click', ()=>loadData(tru
 
 // 启动首次加载
 loadData(false);
+initHistoryFilters();
 
 // ============ 筛选器：按钮组 + 下拉多选 ============
 const DIM_LABEL = {stores:'店铺', months:'月份', cats:'大类', subcats:'二级类目'};
@@ -1150,6 +1218,7 @@ function renderAll(){
   computeView();
   renderKPI();
   renderTrendModule();
+  renderHistoryPanel();
   renderStorePie();
   renderCatModule();
   renderCatStack();
@@ -1349,6 +1418,165 @@ function renderTrendModule(){
   }else{
     renderTrendTable();
   }
+}
+
+// ============ 历史数据汇总板块（独立区域） ============
+const HIST_STORE_ORDER = ['全部','MAOPEA','专卖店','旗舰店','京东','小红书'];
+let histFilter = {
+  years: new Set([2024,2025,2026]),
+  months: new Set([1,2,3,4,5,6,7,8,9,10,11,12]),
+  stores: new Set(['全部']),
+  view: 'month'   // 'year' | 'month' | 'day'
+};
+
+function renderHistChips(){
+  document.getElementById('histYearChips').innerHTML = [2024,2025,2026].map(y=>
+    `<span class="h-chip ${histFilter.years.has(y)?'active':''}" data-type="year" data-val="${y}">${y}年</span>`
+  ).join('');
+  document.getElementById('histMonthChips').innerHTML = [1,2,3,4,5,6,7,8,9,10,11,12].map(m=>
+    `<span class="h-chip ${histFilter.months.has(m)?'active':''}" data-type="month" data-val="${m}">${m}月</span>`
+  ).join('');
+  document.getElementById('histStoreChips').innerHTML = HIST_STORE_ORDER.map(s=>
+    `<span class="h-chip ${histFilter.stores.has(s)?'active':''}" data-type="store" data-val="${s}">${s}</span>`
+  ).join('');
+}
+
+function initHistoryFilters(){
+  renderHistChips();
+  document.getElementById('historyFilters').addEventListener('click', (e)=>{
+    const chip = e.target.closest('.h-chip');
+    if(!chip) return;
+    const type = chip.dataset.type;
+    const val = type==='store' ? chip.dataset.val : +chip.dataset.val;
+    const set = type==='year' ? histFilter.years : (type==='month' ? histFilter.months : histFilter.stores);
+    if(set.has(val)){
+      if(set.size>1) set.delete(val);
+    }else{
+      set.add(val);
+    }
+    renderHistChips();
+    renderHistoryPanel();
+  });
+  document.querySelectorAll('#historyViewToggle .vt-btn').forEach(btn=>{
+    btn.onclick = ()=>{
+      histFilter.view = btn.dataset.view;
+      document.querySelectorAll('#historyViewToggle .vt-btn').forEach(b=>b.classList.toggle('active', b===btn));
+      renderHistoryPanel();
+    };
+  });
+}
+
+function aggregateHistory(){
+  const data = (RAW && RAW.history) || [];
+  const rows = data.filter(r=> histFilter.years.has(r.year)
+                              && histFilter.months.has(r.month)
+                              && histFilter.stores.has(r.store));
+  const keyFn = histFilter.view==='year' ? r=>String(r.year)
+              : histFilter.view==='month' ? r=>`${r.year}-${String(r.month).padStart(2,'0')}`
+              : r=>r.date;
+  const map = {};
+  rows.forEach(r=>{
+    const period = keyFn(r);
+    const k = period + '|' + r.store;
+    if(!map[k]){
+      map[k] = {
+        period,
+        year: r.year,
+        month: r.month,
+        day: r.day,
+        store: r.store,
+        sales: 0,
+        refund: 0,
+        actual: 0,
+        spend: 0,
+        refundCnt: 0,
+        actualCnt: 0,
+        cnt: 0
+      };
+    }
+    const g = map[k];
+    g.sales += (+r.sales||0);
+    g.spend += (+r.spend||0);
+    if(r.refund!=null){ g.refund += +r.refund; g.refundCnt += 1; }
+    if(r.actual!=null){ g.actual += +r.actual; g.actualCnt += 1; }
+    g.cnt += 1;
+  });
+  return Object.values(map).map(g=>({
+    period: g.period,
+    year: g.year,
+    month: g.month,
+    day: g.day,
+    store: g.store,
+    sales: g.sales,
+    refund: g.refundCnt>0 ? g.refund : null,
+    actual: g.actualCnt>0 ? g.actual : null,
+    spend: g.spend,
+    roi: g.spend>0 ? ((g.store==='全部' && g.actualCnt>0) ? g.actual/g.spend : g.sales/g.spend) : null,
+    ratio: g.sales>0 ? g.spend/g.sales : null
+  })).sort((a,b)=>{
+    if(a.period !== b.period) return a.period.localeCompare(b.period);
+    return HIST_STORE_ORDER.indexOf(a.store) - HIST_STORE_ORDER.indexOf(b.store);
+  });
+}
+
+function renderHistoryPanel(){
+  const rows = aggregateHistory();
+  const thead = document.getElementById('historyThead');
+  const tbody = document.getElementById('historyTbody');
+  const tfoot = document.getElementById('historyTfoot');
+  const cols = [
+    {key:'period', label: histFilter.view==='year'?'年份':(histFilter.view==='month'?'月份':'日期')},
+    {key:'store', label:'店铺'},
+    {key:'sales', label:'销售额', num:true},
+    {key:'refund', label:'退款', num:true},
+    {key:'actual', label:'实际销售', num:true},
+    {key:'spend', label:'推广花费', num:true},
+    {key:'roi', label:'ROI', num:true},
+    {key:'ratio', label:'费比', num:true}
+  ];
+  thead.innerHTML = '<tr>' + cols.map(c=>`<th${c.num?' class="num"':''}>${c.label}</th>`).join('') + '</tr>';
+  if(!rows.length){
+    tbody.innerHTML = `<tr><td class="note" colspan="${cols.length}" style="text-align:center;padding:36px">当前筛选条件下无数据</td></tr>`;
+    tfoot.innerHTML = '';
+    return;
+  }
+  tbody.innerHTML = rows.map(r=>{
+    const cells = cols.map(c=>{
+      const v = r[c.key];
+      if(c.key==='period'){
+        if(histFilter.view==='year') return `<td>${v}年</td>`;
+        if(histFilter.view==='month') return `<td>${v.replace('-','年')}月</td>`;
+        return `<td>${v}</td>`;
+      }
+      if(c.key==='store') return `<td>${v}</td>`;
+      if(v==null) return `<td class="num">—</td>`;
+      if(c.key==='roi') return `<td class="num">${v.toFixed(2)}</td>`;
+      if(c.key==='ratio') return `<td class="num">${(v*100).toFixed(2)}%</td>`;
+      return `<td class="num">¥${fmt(v,0)}</td>`;
+    }).join('');
+    return `<tr>${cells}</tr>`;
+  }).join('');
+  const sums = rows.reduce((acc,r)=>{
+    acc.sales += r.sales||0;
+    if(r.refund!=null) acc.refund += r.refund;
+    if(r.actual!=null) acc.actual += r.actual;
+    acc.spend += r.spend||0;
+    return acc;
+  }, {sales:0, refund:0, actual:0, spend:0});
+  let roiVal = null;
+  if(sums.spend>0){
+    roiVal = sums.actual>0 ? sums.actual/sums.spend : sums.sales/sums.spend;
+  }
+  const trow = [
+    '<td>合计</td>','<td class="num">—</td>',
+    `<td class="num">¥${fmt(sums.sales,0)}</td>`,
+    `<td class="num">${sums.refund>0?'¥'+fmt(sums.refund,0):'—'}</td>`,
+    `<td class="num">${sums.actual>0?'¥'+fmt(sums.actual,0):'—'}</td>`,
+    `<td class="num">¥${fmt(sums.spend,0)}</td>`,
+    `<td class="num">${roiVal!=null?roiVal.toFixed(2):'—'}</td>`,
+    `<td class="num">${sums.sales>0?((sums.spend/sums.sales)*100).toFixed(2)+'%':'—'}</td>`
+  ].join('');
+  tfoot.innerHTML = `<tr>${trow}</tr>`;
 }
 
 // ============ 店铺饼图 ============
